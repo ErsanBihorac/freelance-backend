@@ -5,19 +5,31 @@ from .services import send_contact_email
 
 @csrf_exempt
 def send_email_view(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            name = data.get('name')
-            email = data.get('email')
-            website = data.get('website')
-            message = data.get('message')
+    if request.method != "POST":
+        return JsonResponse(
+            {"error": "Only POST allowed"},
+            status=405
+        )
 
-            if send_contact_email(name, email, message, website):
-                return JsonResponse({'success': True})
-            else:
-                return JsonResponse({'success': False, 'error': 'Fehler beim Senden'})
-        except Exception as e:
-            return JsonResponse({'success': False, 'error': str(e)})
+    try:
+        data = json.loads(request.body.decode("utf-8"))
+    except json.JSONDecodeError:
+        return JsonResponse(
+            {"error": "Invalid JSON"},
+            status=400
+        )
 
-    return JsonResponse({'success': False, 'error': 'Nur POST erlaubt'})
+    name = data.get("name")
+    email = data.get("email")
+    website = data.get("website")
+    message = data.get("message")
+
+    if not name or not email or not message:
+        return JsonResponse(
+            {"error": "Missing required fields"},
+            status=400
+        )
+
+    send_contact_email(name, email, message, website)
+
+    return JsonResponse({"success": True})
