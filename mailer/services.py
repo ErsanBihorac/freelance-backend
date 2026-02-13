@@ -14,7 +14,7 @@ def send_contact_email(name: str, email: str, message: str, website: str = None)
         send_mail(
             subject=f'ersan-bihorac.de: Nachricht von {name}',
             message=f'Name: {name}, {website_text}, E-Mail-adresse: {email}\n\nNachricht: {message}',
-            from_email=settings.EMAIL_HOST_USER,
+            from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[settings.EMAIL_HOST_USER],
             fail_silently=False,
         )
