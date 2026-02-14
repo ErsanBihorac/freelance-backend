@@ -52,6 +52,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', default='').split(',')
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='').split(',')
 
 ROOT_URLCONF = 'core.urls'
 
